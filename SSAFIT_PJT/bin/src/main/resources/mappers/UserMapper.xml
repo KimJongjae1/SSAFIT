@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.ssafit.user.dao.UserDao">
+
+	<select id="findById" resultType="com.ssafy.ssafit.user.dto.User">
+		SELECT * FROM user WHERE id = #{id}
+	</select>
+	
+	<select id="findByUserId" resultType="com.ssafy.ssafit.user.dto.User">
+  		SELECT * FROM user WHERE user_id = #{userId}
+	</select>
+	
+	<update id="updateUser">
+	    UPDATE user
+	    SET
+	        password = #{user.password},
+	        email = #{user.email},
+	        nick_name = #{user.nickName},
+	        phone = #{user.phone}
+	    WHERE user_id = #{userId}
+	</update>
+
+
+
+
+
+	<insert id="insertUser" parameterType="com.ssafy.ssafit.user.dto.UserSignUpRequestDto">
+	    INSERT INTO user (id, password, name, email, nick_name, phone)
+	    VALUES (#{id}, #{password}, #{name}, #{email}, #{nickName}, #{phone})
+	</insert>
+
+
+</mapper>

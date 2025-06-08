@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.ssafit.friend.dao.FriendDao">
+
+    <resultMap id="userResultMap" type="com.ssafy.ssafit.user.dto.User">
+        <id property="userId" column="user_id"/>
+        <result property="id" column="id"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="phone" column="phone"/>
+    </resultMap>
+
+    <insert id="insertFollow">
+        INSERT IGNORE INTO follow (follower_id, followee_id)
+        VALUES (#{followerId}, #{followeeId})
+    </insert>
+
+    <delete id="deleteFollow">
+        DELETE FROM follow
+        WHERE follower_id = #{followerId}
+          AND followee_id = #{followeeId}
+    </delete>
+
+    <select id="selectMutualFriends" resultMap="userResultMap">
+        SELECT u.user_id, u.id, u.password, u.name, u.email, u.nick_name, u.phone
+        FROM follow f1
+        JOIN follow f2 ON f1.follower_id = f2.followee_id
+                       AND f1.followee_id = f2.follower_id
+        JOIN user u ON u.user_id = f1.followee_id
+        WHERE f1.follower_id = #{userId}
+    </select>
+
+</mapper>

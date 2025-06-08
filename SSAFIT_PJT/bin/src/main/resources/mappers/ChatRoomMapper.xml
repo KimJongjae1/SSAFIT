@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.ssafit.friend.dao.ChatRoomDao">
+  <select id="exists" resultType="boolean">
+    SELECT COUNT(*) > 0 FROM chat_room
+    WHERE user1_id = #{user1Id} AND user2_id = #{user2Id}
+  </select>
+
+  <insert id="createRoom">
+    INSERT INTO chat_room (user1_id, user2_id)
+    VALUES (#{user1Id}, #{user2Id})
+  </insert>
+</mapper>

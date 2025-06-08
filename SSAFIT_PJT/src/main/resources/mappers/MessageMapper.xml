@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.ssafit.message.dao.MessageDao">
+
+	<resultMap id="messageResultMap" type="com.ssafy.ssafit.message.dto.Message">
+	    <id property="messageId" column="message_id"/>
+	    <result property="senderId" column="sender_id"/>
+	    <result property="receiverId" column="receiver_id"/>
+	    <result property="content" column="content"/>
+	    <result property="sentAt" column="sent_at"/>
+	    <result property="isRead" column="is_read"/>
+	    <result property="senderNickName" column="sender_nick_name"/> <!-- ✅ 추가 -->
+	</resultMap>
+
+
+    <!-- 메시지 전송 -->
+    <insert id="insertMessage" parameterType="com.ssafy.ssafit.message.dto.Message">
+        INSERT INTO message (sender_id, receiver_id, content)
+        VALUES (#{senderId}, #{receiverId}, #{content})
+    </insert>
+
+    <!-- 받은 메시지 목록 -->
+	<select id="selectReceivedMessages" resultMap="messageResultMap">
+	    SELECT m.*, u.nick_name AS sender_nick_name
+	    FROM message m
+	    JOIN user u ON m.sender_id = u.user_id
+	    WHERE m.receiver_id = #{userId}
+	    ORDER BY m.sent_at DESC
+	</select>
+
+
+    <!-- 보낸 메시지 목록 -->
+    <select id="selectSentMessages" resultType="com.ssafy.ssafit.message.dto.Message">
+        SELECT * FROM message
+        WHERE sender_id = #{userId}
+        ORDER BY sent_at DESC
+    </select>
+
+    <!-- 메시지 읽음 처리 -->
+    <update id="markAsRead">
+        UPDATE message
+        SET is_read = true
+        WHERE message_id = #{messageId}
+    </update>
+
+</mapper>
